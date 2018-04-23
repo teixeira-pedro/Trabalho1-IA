@@ -5,7 +5,7 @@
  */
 package trabalho1.ia;
 
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -14,10 +14,10 @@ import java.util.ArrayList;
 public class No {
 
     int id, num;
-    ArrayList filhos;
+    ArrayList<No> filhos;
     String titulo;
 
-    public No(int id, int num, ArrayList filhos, String titulo) {
+    public No(int id, int num, ArrayList<No> filhos, String titulo) {
         this.id = id;
         this.num = num;
         this.filhos = filhos;
@@ -27,7 +27,7 @@ public class No {
     No(int id, String titulo) {
         this.id = id;
         this.num = 0;
-        this.filhos = new ArrayList();
+        this.filhos = new ArrayList<>();
         this.titulo = titulo;
     }
 
@@ -63,11 +63,11 @@ public class No {
         this.num = num;
     }
 
-    public ArrayList getFilhos() {
+    public ArrayList<No> getFilhos() {
         return filhos;
     }
 
-    public void setFilhos(ArrayList filhos) {
+    public void setFilhos(ArrayList<No> filhos) {
         this.filhos = filhos;
     }
 
@@ -114,5 +114,40 @@ public class No {
                 System.out.print(this.filhos.get(i) + ", ");
             }
         }
+    }
+    
+    
+    //TODO: mudar para uma classe de utils
+    public ArrayList<No> BuscaEmProfundidade(No noInicial){
+        
+        HashSet<No> visitados = new HashSet<>();
+        Stack<No> pilha = new Stack<>();
+        ArrayList<No> resposta = new ArrayList<>();
+        
+        pilha.add(noInicial);
+        
+        while (!pilha.empty()){
+            No atual = pilha.pop();
+            
+            if(!visitados.add(atual))
+                continue;
+            
+            resposta.add(atual);
+            
+            ArrayList<No> filhosNaoVisitados = new ArrayList<>();
+            
+            for (No filho : atual.filhos) {
+                if (!visitados.contains(filho)){
+                    filhosNaoVisitados.add(filho);
+                }
+            }
+            
+            for (No filhoNaoVisitado : filhosNaoVisitados) {
+                pilha.add(filhoNaoVisitado);
+            }
+        }
+        
+        return resposta;
+        
     }
 }

@@ -30,7 +30,7 @@ public class Trabalho1IA {
 
         //Le os vertices e cria a estutura de nós...
         try {
-            FileReader arq = new FileReader("C:\\Users\\Felipe\\Documents\\NetBeansProjects\\Trabalho1-IA\\src\\trabalho1\\ia\\vertices.txt");
+            FileReader arq = new FileReader("src/trabalho1/ia/vertices.txt");
             BufferedReader lerArq = new BufferedReader(arq);
             Aresta a;
             String linha = lerArq.readLine();
@@ -49,7 +49,7 @@ public class Trabalho1IA {
         }
 
         try {
-            FileReader arq = new FileReader("C:\\Users\\Felipe\\Documents\\NetBeansProjects\\Trabalho1-IA\\src\\trabalho1\\ia\\arestas.txt");
+            FileReader arq = new FileReader("src/trabalho1/ia/arestas.txt");
             BufferedReader lerArq = new BufferedReader(arq);
             Aresta a;
             String linha = lerArq.readLine();
