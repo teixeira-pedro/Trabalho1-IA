@@ -118,13 +118,15 @@ public class No {
     
     
     //TODO: mudar para uma classe de utils
-    public ArrayList<No> BuscaEmProfundidade(No noInicial){
+    public Map.Entry<ArrayList<No>, No> BuscaEmProfundidade(No noInicial){
         
         HashSet<No> visitados = new HashSet<>();
         Stack<No> pilha = new Stack<>();
         ArrayList<No> resposta = new ArrayList<>();
         
         pilha.add(noInicial);
+        
+        No maisPopular = noInicial;
         
         while (!pilha.empty()){
             No atual = pilha.pop();
@@ -133,6 +135,10 @@ public class No {
                 continue;
             
             resposta.add(atual);
+            
+            if (atual.filhos.toArray().length > maisPopular.filhos.toArray().length){
+                maisPopular = atual;
+            }
             
             ArrayList<No> filhosNaoVisitados = new ArrayList<>();
             
@@ -147,7 +153,7 @@ public class No {
             }
         }
         
-        return resposta;
+        return new AbstractMap.SimpleEntry(resposta, maisPopular);
         
     }
 }
