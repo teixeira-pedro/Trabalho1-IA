@@ -102,7 +102,6 @@ public class Trabalho1IA {
                 System.out.println("Quantidade de nós percorridos pela busca em profundidade: "+ buscaEmProfundidade.getKey());
             }
         }
-
     }
 
 }
