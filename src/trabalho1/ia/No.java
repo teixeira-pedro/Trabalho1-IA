@@ -162,8 +162,7 @@ public class No {
         while (!pilha.empty()){
             No atual = pilha.pop();
             
-            if(!visitados.add(atual))
-                continue;
+            visitados.add(atual);
             
             filhosPercorridos++;
             
