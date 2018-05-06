@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -22,13 +23,13 @@ public class Trabalho1IA {
      */
     public static void main(String[] args) {
 
-        //Cria as duas estruturas de nó e arestas
-        ArrayList<No> grafo = new ArrayList<>();
-        ArrayList<Aresta> aresta = new ArrayList();
+        //Cria as duas estruturas de nÃ³ e arestas
+        ArrayList<No> grafo = new ArrayList<No>();
+        ArrayList<Aresta> aresta = new ArrayList<Aresta>();
 
         Scanner ler = new Scanner(System.in);
 
-        //Le os vertices e cria a estutura de nós...
+        //Le os vertices e cria a estutura de nÃ³s...
         try {
             FileReader arq = new FileReader("src/trabalho1/ia/vertices.txt");
             BufferedReader lerArq = new BufferedReader(arq);
@@ -39,7 +40,7 @@ public class Trabalho1IA {
                 String[] palavra = linha.split("\t");
                 g = new No(Integer.parseInt(palavra[0]), palavra[1]);
                 grafo.add(g);
-                linha = lerArq.readLine(); // lê da segunda até a última linha
+                linha = lerArq.readLine(); // lÃª da segunda atÃ© a Ãºltima linha
             }
 
             arq.close();
@@ -67,22 +68,38 @@ public class Trabalho1IA {
                     e.getMessage());
         }
 
-        //Atualiza os atributos de cada nó, de acordo com o arquivo de texto de entrada
+        //Atualiza os atributos de cada nÃ³, de acordo com o arquivo de texto de entrada
         for (int i = 0; i < aresta.size(); i++) {
             No.atualiza(grafo, aresta.get(i));
         }
 
-        //Consulta dos nós
+        //Consulta dos nÃ³s
         String nome;
         while (true) {
             System.out.print("Entre o ID do No: ");
             nome = ler.nextLine();
             int num = Integer.parseInt(nome);
-            if (num < 0 || num > 2554) {
+            if (num < 0) break;
+            if (num > 2554) {
                 System.out.println("Numero Invalido");
             } else {
-                grafo.get(num).lista_filhos();
-                System.out.println("Quantidade de filhos: " + grafo.get(num).getNum() + "\n");
+                No inicial = grafo.get(num);
+                
+                inicial.lista_filhos();
+                System.out.println("Quantidade de filhos: " + inicial.getNum() + "\n");
+                
+                No guloso = No.greedy(inicial);
+                System.out.println("Artigo mais influente achado pelo guloso: " + guloso.getId());
+                System.out.println("Quantidade de filhos achados pelo guloso: "+ guloso.getNum());
+                
+                No graspResul = No.grasp(inicial,5,grafo);
+                System.out.println("Artigo mais influente achado pelo Grasp: " + graspResul.getId());
+                System.out.println("Quantidade de filhos achados pelo Grasp: "+ graspResul.getNum());
+                
+                Map.Entry<Integer, No> buscaEmProfundidade = No.BuscaEmProfundidade(inicial);
+                
+                System.out.println("Artigo mais influente achado pela busca em profundidade: " + buscaEmProfundidade.getValue().getId());
+                System.out.println("Quantidade de nós percorridos pela busca em profundidade: "+ buscaEmProfundidade.getKey());
             }
         }
 

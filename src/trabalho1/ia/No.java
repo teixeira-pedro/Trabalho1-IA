@@ -27,7 +27,7 @@ public class No {
     No(int id, String titulo) {
         this.id = id;
         this.num = 0;
-        this.filhos = new ArrayList<>();
+        this.filhos = new ArrayList<No>();
         this.titulo = titulo;
     }
 
@@ -64,7 +64,7 @@ public class No {
     }
 
     public ArrayList<No> getFilhos() {
-        return filhos;
+        return this.filhos;
     }
 
     public void setFilhos(ArrayList<No> filhos) {
@@ -83,16 +83,16 @@ public class No {
     public static void atualiza(ArrayList<No> grafo, Aresta a) {
 
         No no1 = getNo(grafo, a.getV1());
-        ArrayList f1 = no1.getFilhos();
+        ArrayList<No> f1 = no1.getFilhos();
         if (!no1.existe(a.getV2())) {
-            f1.add(a.getV2());
+            f1.add(grafo.get(a.getV2()));
             no1.setNum(no1.getNum() + 1);
         }
         
         No no2 = getNo(grafo, a.getV2());
-        ArrayList f2 = no2.getFilhos();
+        ArrayList<No> f2 = no2.getFilhos();
         if (!no2.existe(a.getV1())) {
-            f2.add(a.getV1());
+            f2.add(grafo.get(a.getV1()));
             no2.setNum(no2.getNum() + 1);
         }
         
@@ -109,20 +109,51 @@ public class No {
         System.out.print("Filhos de \"" + this.getTitulo()+ "\":\n{");
         for (int i = 0; i < this.filhos.size(); i++) {
             if (i == this.filhos.size() - 1) {
-                System.out.println(this.filhos.get(i) + "}");
+                System.out.println(this.filhos.get(i).getId() + "}");
             } else {
-                System.out.print(this.filhos.get(i) + ", ");
+                System.out.print(this.filhos.get(i).getId() + ", ");
             }
         }
     }
+    public static No greedy (No no){
+        int maior = 0;
+        for (int i = 0; i < no.getNum(); i++) {
+            if (no.filhos.get(i).getNum() > no.filhos.get(maior).getNum()) {
+                maior = i;
+            }
+        }
+        if (no.getNum() < no.filhos.get(maior).getNum()) {
+            no = greedy(no.filhos.get(maior));
+        }
+        return no;
+    }
     
+    public static No grasp(No no, int x,ArrayList<No> grafo){
+        No auxiliar = no;
+        Random rand = new Random();
+        ArrayList <No> vencedores= new ArrayList<No>();
+        No vencedor= no;
+        for(int i=0;i<x;i++){
+            int y = rand.nextInt(2554);
+            vencedor = greedy(auxiliar);
+            vencedores.add(vencedor);
+            auxiliar = No.getNo(grafo, y);
+        }
+       vencedor = vencedores.get(0);
+       for(No ganhador: vencedores){
+           if(ganhador.getNum()>vencedor.getNum())
+               vencedor = ganhador;
+       }
+       return vencedor;
+    }
     
     //TODO: mudar para uma classe de utils
-    public Map.Entry<ArrayList<No>, No> BuscaEmProfundidade(No noInicial){
+    public static Map.Entry<Integer, No> BuscaEmProfundidade(No noInicial){
         
         HashSet<No> visitados = new HashSet<>();
         Stack<No> pilha = new Stack<>();
-        ArrayList<No> resposta = new ArrayList<>();
+        //ArrayList<No> resposta = new ArrayList<>();
+        int filhosPercorridos = 0;
         
         pilha.add(noInicial);
         
@@ -134,15 +165,15 @@ public class No {
             if(!visitados.add(atual))
                 continue;
             
-            resposta.add(atual);
+            filhosPercorridos++;
             
-            if (atual.filhos.toArray().length > maisPopular.filhos.toArray().length){
+            if (atual.getNum() > maisPopular.getNum()){
                 maisPopular = atual;
             }
             
             ArrayList<No> filhosNaoVisitados = new ArrayList<>();
             
-            for (No filho : atual.filhos) {
+            for (No filho : atual.getFilhos()) {
                 if (!visitados.contains(filho)){
                     filhosNaoVisitados.add(filho);
                 }
@@ -153,7 +184,7 @@ public class No {
             }
         }
         
-        return new AbstractMap.SimpleEntry(resposta, maisPopular);
+        return new AbstractMap.SimpleEntry(filhosPercorridos, maisPopular);
         
     }
 }
